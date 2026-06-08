@@ -148,4 +148,9 @@ def insercion_inicial_coleccion_clientes() -> None:
 
     print(respuesta)
 
+clientes_documentos = clientes.find()
+
+for documento in clientes_documentos:
+    print(documento)
+
 insercion_inicial_coleccion_clientes()
