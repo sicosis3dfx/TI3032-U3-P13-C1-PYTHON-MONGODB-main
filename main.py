@@ -9,6 +9,7 @@ MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
 
 try:
+    print("Estableciendo conexión ⌛")
     client.admin.command("ping")
     print(" Conexión establecida 😁 👌")
 except:
