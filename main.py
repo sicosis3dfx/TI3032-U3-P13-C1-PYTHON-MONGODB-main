@@ -226,3 +226,18 @@ def insercion_inicial_coleccion_pedidos() -> None:
     )
 
     print(respuesta)
+
+# Ejecución de la inserción incial
+# insercion_inicial_coleccion_clientes()
+# insercion_inicial_coleccion_pedidos()
+
+documentos_clientes = coleccion_clientes.find()
+documentos_pedidos = coleccion_pedidos.find()
+
+print(documentos_clientes)
+print(documentos_pedidos)
+
+for documento in documentos_clientes:
+    print(f"Documento: {documento["_id"]}")
+    for campo in documento:
+        print(f"{campo}: {documento[campo]}")
