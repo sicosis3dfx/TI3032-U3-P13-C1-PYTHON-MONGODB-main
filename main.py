@@ -6,7 +6,7 @@ from pymongo import MongoClient
 load_dotenv()
 MONGO_URI = os.getenv("MONGO_URI")
 
-client = MongoClient(MONGO_URI)
+client: MongoClient = MongoClient(MONGO_URI)
 
 try:
     print("Estableciendo conexión ⌛")
@@ -16,141 +16,213 @@ except:
     print(" ❌ Error de conexión 🤣 🤣")
     exit(code=1)
 
-db_tienda_regex = client["tienda_regex"] #Elijo la base de datos
+TI3032_U3_EF = client["TI3032_U3_EF"]  # Elijo la base de datos
 
-clientes = db_tienda_regex["clientes"] #Elijo la conexión
+coleccion_clientes = TI3032_U3_EF["clientes"]  # Selección de la conexión Cientes
+coleccion_pedidos = TI3032_U3_EF["pedidos"]  # Selección de la conexión Pedidos
+
 
 def insercion_inicial_coleccion_clientes() -> None:
-    respuesta = clientes.insert_many(
+    respuesta = coleccion_clientes.insert_many(
         [
             {
-                "nombre": "Ana Torres",
-                "email": "ana.torres@gmail.com",
-                "ciudad": "Santiago",
-                "descripcion": "Cliente frecuente interesada en productos tecnológicos y accesorios."
+                "_id": 1,
+                "nombre": "Laura Martínez",
+                "email": "laura.martinez@gmail.com",
+                "fecha_registro": "2026-01-15T10:30:00Z",
+                "direccion": "Av. Providencia 1234, Santiago",
+                "telefono": "+56 9 8123 4567",
             },
             {
-                "nombre": "Andrés Muñoz",
-                "email": "andres.munoz@outlook.com",
-                "ciudad": "Valparaíso",
-                "descripcion": "Compra notebooks, teclados mecánicos y audífonos gamer."
+                "_id": 2,
+                "nombre": "Carlos Rojas",
+                "email": "carlos.rojas@hotmail.com",
+                "fecha_registro": "2025-09-22T14:10:00Z",
+                "direccion": "Calle Los Aromos 456, Valparaíso",
+                "telefono": "+56 9 7234 5678",
             },
             {
-                "nombre": "Beatriz Rojas",
-                "email": "beatriz.rojas@gmail.com",
-                "ciudad": "Concepción",
-                "descripcion": "Busca ofertas en productos para oficina y escritorio."
-            },
-            {
-                "nombre": "Carlos Pérez",
-                "email": "carlos.perez@hotmail.com",
-                "ciudad": "La Serena",
-                "descripcion": "Cliente nuevo interesado en celulares y planes móviles."
-            },
-            {
-                "nombre": "Camila Soto",
-                "email": "camila.soto@duoc.cl",
-                "ciudad": "Santiago",
-                "descripcion": "Estudiante que compra accesorios para computador."
-            },
-            {
-                "nombre": "Daniela Vargas",
-                "email": "daniela.vargas@inacap.cl",
-                "ciudad": "Rancagua",
-                "descripcion": "Interesada en cursos, tecnología educativa y tablets."
-            },
-            {
-                "nombre": "Diego Herrera",
-                "email": "diego.herrera@gmail.com",
-                "ciudad": "Temuco",
-                "descripcion": "Compra componentes para armar computadores de escritorio."
-            },
-            {
-                "nombre": "Elena Morales",
-                "email": "elena.morales@yahoo.com",
-                "ciudad": "Antofagasta",
-                "descripcion": "Busca productos de seguridad, cámaras y sensores inteligentes."
-            },
-            {
-                "nombre": "Esteban Castro",
-                "email": "esteban.castro@outlook.com",
-                "ciudad": "Puerto Montt",
-                "descripcion": "Cliente interesado en videojuegos, consolas y controles."
-            },
-            {
+                "_id": 3,
                 "nombre": "Fernanda Silva",
                 "email": "fernanda.silva@gmail.com",
-                "ciudad": "Viña del Mar",
-                "descripcion": "Compra artículos de oficina, impresoras y tintas."
+                "fecha_registro": "2024-03-05T09:45:00Z",
+                "direccion": "Pasaje Las Rosas 789, Concepción",
+                "telefono": "+56 9 6345 6789",
             },
             {
-                "nombre": "Felipe González",
-                "email": "felipe.gonzalez@inacap.cl",
-                "ciudad": "Santiago",
-                "descripcion": "Estudiante interesado en programación, robótica y electrónica."
+                "_id": 4,
+                "nombre": "Javier Torres",
+                "email": "javier.torres@outlook.com",
+                "fecha_registro": "2026-04-18T16:20:00Z",
+                "direccion": "Av. Alemania 321, Temuco",
+                "telefono": "+56 9 5456 7890",
             },
             {
-                "nombre": "Gabriela Fuentes",
-                "email": "gabriela.fuentes@hotmail.com",
-                "ciudad": "Talca",
-                "descripcion": "Prefiere productos económicos para el hogar inteligente."
+                "_id": 5,
+                "nombre": "Camila Soto",
+                "email": "camila.soto@gmail.com",
+                "fecha_registro": "2025-12-02T11:00:00Z",
+                "direccion": "Calle San Martín 654, La Serena",
+                "telefono": "+56 9 4567 8901",
             },
             {
-                "nombre": "Gonzalo Ramírez",
-                "email": "gonzalo.ramirez@gmail.com",
-                "ciudad": "Iquique",
-                "descripcion": "Busca notebooks gamer, monitores y tarjetas gráficas."
+                "_id": 6,
+                "nombre": "Matías Herrera",
+                "email": "matias.herrera@yahoo.com",
+                "fecha_registro": "2023-07-11T13:25:00Z",
+                "direccion": "Av. Brasil 987, Antofagasta",
+                "telefono": "+56 9 3678 9012",
             },
             {
-                "nombre": "Hugo Medina",
-                "email": "hugo.medina@empresa.cl",
-                "ciudad": "Santiago",
-                "descripcion": "Compra equipos para empresas y soluciones de red."
+                "_id": 7,
+                "nombre": "Valentina Fuentes",
+                "email": "valentina.fuentes@gmail.com",
+                "fecha_registro": "2026-02-28T08:15:00Z",
+                "direccion": "Camino El Alba 147, Rancagua",
+                "telefono": "+56 9 2789 0123",
             },
             {
-                "nombre": "Ignacia López",
-                "email": "ignacia.lopez@duoc.cl",
-                "ciudad": "Chillán",
-                "descripcion": "Interesada en tablets, lápices digitales y accesorios."
+                "_id": 8,
+                "nombre": "Diego Morales",
+                "email": "diego.morales@empresa.cl",
+                "fecha_registro": "2022-10-09T17:40:00Z",
+                "direccion": "Calle Maipú 258, Talca",
+                "telefono": "+56 9 1890 1234",
             },
             {
-                "nombre": "Javier Contreras",
-                "email": "javier.contreras@gmail.com",
-                "ciudad": "Coquimbo",
-                "descripcion": "Compra cámaras web, micrófonos y accesorios de streaming."
+                "_id": 9,
+                "nombre": "Paula Contreras",
+                "email": "paula.contreras@gmail.com",
+                "fecha_registro": "2025-06-20T12:05:00Z",
+                "direccion": "Av. Costanera 369, Puerto Montt",
+                "telefono": "+56 9 9001 2345",
             },
             {
-                "nombre": "Josefa Núñez",
-                "email": "josefa.nunez@outlook.com",
-                "ciudad": "Santiago",
-                "descripcion": "Busca ofertas en celulares, cargadores y audífonos."
+                "_id": 10,
+                "nombre": "Andrés Vega",
+                "email": "andres.vega@icloud.com",
+                "fecha_registro": "2024-11-30T15:55:00Z",
+                "direccion": "Pasaje Los Pinos 741, Chillán",
+                "telefono": "+56 9 8111 2222",
             },
-            {
-                "nombre": "Karina Paredes",
-                "email": "karina.paredes@yahoo.com",
-                "ciudad": "Arica",
-                "descripcion": "Cliente interesada en productos para teletrabajo."
-            },
-            {
-                "nombre": "Luis Fernández",
-                "email": "luis.fernandez@empresa.cl",
-                "ciudad": "Concepción",
-                "descripcion": "Compra routers, switches y dispositivos de conectividad."
-            },
-            {
-                "nombre": "María José Salinas",
-                "email": "maria.salinas@gmail.com",
-                "ciudad": "Santiago",
-                "descripcion": "Busca computadores, monitores y productos de oficina."
-            }
-]
-)
+        ]
+    )
 
     print(respuesta)
 
-clientes_documentos = clientes.find()
 
-for documento in clientes_documentos:
-    print(documento)
+def insercion_inicial_coleccion_pedidos() -> None:
+    respuesta = coleccion_pedidos.insert_many(
+        [
+            {
+                "cliente_id": 1,
+                "fecha_pedido": "2026-02-10T10:00:00Z",
+                "monto_total": 245.90,
+                "productos": [
+                    {"producto_id": 101, "cantidad": 1, "precio": 120.00},
+                    {"producto_id": 205, "cantidad": 2, "precio": 62.95},
+                ],
+            },
+            {
+                "cliente_id": 2,
+                "fecha_pedido": "2025-10-01T13:30:00Z",
+                "monto_total": 89.50,
+                "productos": [{"producto_id": 302, "cantidad": 1, "precio": 89.50}],
+            },
+            {
+                "cliente_id": 3,
+                "fecha_pedido": "2023-04-15T09:20:00Z",
+                "monto_total": 560.00,
+                "productos": [
+                    {"producto_id": 101, "cantidad": 2, "precio": 180.00},
+                    {"producto_id": 410, "cantidad": 1, "precio": 200.00},
+                ],
+            },
+            {
+                "cliente_id": 4,
+                "fecha_pedido": "2026-05-03T18:45:00Z",
+                "monto_total": 720.35,
+                "productos": [
+                    {"producto_id": 508, "cantidad": 1, "precio": 450.35},
+                    {"producto_id": 207, "cantidad": 3, "precio": 90.00},
+                ],
+            },
+            {
+                "cliente_id": 5,
+                "fecha_pedido": "2026-01-20T11:10:00Z",
+                "monto_total": 135.75,
+                "productos": [{"producto_id": 101, "cantidad": 1, "precio": 135.75}],
+            },
+            {
+                "cliente_id": 6,
+                "fecha_pedido": "2023-11-22T16:05:00Z",
+                "monto_total": 42.99,
+                "productos": [{"producto_id": 601, "cantidad": 1, "precio": 42.99}],
+            },
+            {
+                "cliente_id": 7,
+                "fecha_pedido": "2026-03-14T12:35:00Z",
+                "monto_total": 980.00,
+                "productos": [
+                    {"producto_id": 305, "cantidad": 2, "precio": 250.00},
+                    {"producto_id": 412, "cantidad": 4, "precio": 120.00},
+                ],
+            },
+            {
+                "cliente_id": 8,
+                "fecha_pedido": "2024-08-19T19:00:00Z",
+                "monto_total": 310.40,
+                "productos": [{"producto_id": 208, "cantidad": 1, "precio": 310.40}],
+            },
+            {
+                "cliente_id": 9,
+                "fecha_pedido": "2025-07-08T15:25:00Z",
+                "monto_total": 515.20,
+                "productos": [
+                    {"producto_id": 101, "cantidad": 1, "precio": 215.20},
+                    {"producto_id": 509, "cantidad": 2, "precio": 150.00},
+                ],
+            },
+            {
+                "cliente_id": 10,
+                "fecha_pedido": "2023-01-30T08:50:00Z",
+                "monto_total": 155.00,
+                "productos": [{"producto_id": 706, "cantidad": 5, "precio": 31.00}],
+            },
+            {
+                "cliente_id": 1,
+                "fecha_pedido": "2023-09-12T14:15:00Z",
+                "monto_total": 75.60,
+                "productos": [{"producto_id": 333, "cantidad": 2, "precio": 37.80}],
+            },
+            {
+                "cliente_id": 2,
+                "fecha_pedido": "2026-04-09T10:40:00Z",
+                "monto_total": 640.90,
+                "productos": [
+                    {"producto_id": 101, "cantidad": 3, "precio": 120.00},
+                    {"producto_id": 804, "cantidad": 1, "precio": 280.90},
+                ],
+            },
+            {
+                "cliente_id": 5,
+                "fecha_pedido": "2025-12-18T17:30:00Z",
+                "monto_total": 98.00,
+                "productos": [{"producto_id": 212, "cantidad": 2, "precio": 49.00}],
+            },
+            {
+                "cliente_id": 7,
+                "fecha_pedido": "2023-06-25T20:10:00Z",
+                "monto_total": 430.00,
+                "productos": [{"producto_id": 610, "cantidad": 1, "precio": 430.00}],
+            },
+            {
+                "cliente_id": 9,
+                "fecha_pedido": "2026-05-28T09:05:00Z",
+                "monto_total": 110.30,
+                "productos": [{"producto_id": 715, "cantidad": 1, "precio": 110.30}],
+            },
+        ]
+    )
 
-insercion_inicial_coleccion_clientes()
+    print(respuesta)
