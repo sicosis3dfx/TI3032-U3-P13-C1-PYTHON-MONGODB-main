@@ -3,6 +3,9 @@ from dotenv import load_dotenv
 
 from pymongo import MongoClient
 
+import datetime
+import subprocess
+
 load_dotenv()
 MONGO_URI = os.getenv("MONGO_URI")
 
@@ -227,17 +230,62 @@ def insercion_inicial_coleccion_pedidos() -> None:
 
     print(respuesta)
 
-# Ejecución de la inserción incial
-# insercion_inicial_coleccion_clientes()
-# insercion_inicial_coleccion_pedidos()
+def clientes_ultimo_año() -> None:
+    fecha_de_hoy = datetime.datetime.now()
+    año_pasado = fecha_de_hoy.year -1
+    fecha_a_consultar = datetime.date(
+        year=año_pasado,
+        mont=fecha_de_hoy.month,
+        day=fecha_de_hoy.day
+    )
+    #Consulta desde el año pasado hasta hoy
+    query = {"fecha_registro" : { "$gte:":  f"{fecha_a_consultar}T00:00:00Z"} }
+    resultado = coleccion_clientes.find(query)
 
-documentos_clientes = coleccion_clientes.find()
-documentos_pedidos = coleccion_pedidos.find()
+    for doc in resultado:
+        print(doc)
 
-print(documentos_clientes)
-print(documentos_pedidos)
+def main():
+    # Limpiar mis colecciones
+    coleccion_clientes.drop()
+    coleccion_pedidos.drop()
 
-for documento in documentos_clientes:
-    print(f"Documento: {documento["_id"]}")
-    for campo in documento:
-        print(f"{campo}: {documento[campo]}")
+    # Ejecución de la inserción incial
+    insercion_inicial_coleccion_clientes()
+    insercion_inicial_coleccion_pedidos()
+
+    while True:
+        print(
+            """
+            ===================================================================
+            |                         PYMONGO ECOMMERCE                       |
+            ===================================================================
+            1. Selecciona todos los clientes que se registraron el ultimo año.
+            """
+        )
+        opcion = input("Ingresa tu opción [1-5]: ")
+
+        if opcion == "1":
+            subprocess.run(["cls"], shell=True, check=True)
+            pass
+        elif opcion == "2":
+            pass
+            subprocess.run(["cls"], shell=True, check=True)
+        elif opcion == "3":
+            pass
+            subprocess.run(["cls"], shell=True, check=True)
+        elif opcion == "4":
+            pass
+            subprocess.run(["cls"], shell=True, check=True)
+        elif opcion == "5":
+            pass
+            subprocess.run(["cls"], shell=True, check=True)
+        elif opcion == "0":
+            input("Adios. Presiona ENTER para salir...")
+            break
+        else:
+            input("Opción incorrecta. Presiona ENTER para continuar")
+    # Salir del programa si el usuario rompe el bucle
+
+if __name__ == "__main__":
+    main()
