@@ -229,19 +229,23 @@ def insercion_inicial_coleccion_pedidos() -> None:
     )
 
     print(respuesta)
-
+    
 def clientes_ultimo_año() -> None:
+    # Calcular la fecha de hoy en el año pasado
     fecha_de_hoy = datetime.datetime.now()
-    año_pasado = fecha_de_hoy.year -1
+    año_pasado = fecha_de_hoy.year - 1
     fecha_a_consultar = datetime.date(
         year=año_pasado,
-        mont=fecha_de_hoy.month,
+        month=fecha_de_hoy.month,
         day=fecha_de_hoy.day
     )
-    #Consulta desde el año pasado hasta hoy
-    query = {"fecha_registro" : { "$gte:":  f"{fecha_a_consultar}T00:00:00Z"} }
-    resultado = coleccion_clientes.find(query)
-
+    # Consulta desde el año pasado hasta hoy
+    query = {"fecha_registro" : { "$gte": f"{fecha_a_consultar}T00:00:00Z" } }
+    resultado = coleccion_clientes.aggregate([
+        { "$match": query  },
+        { "$sort": { "fecha_registro": -1 } }
+    ])
+    # Mostrar resultado
     for doc in resultado:
         print(doc)
 
@@ -250,42 +254,50 @@ def main():
     coleccion_clientes.drop()
     coleccion_pedidos.drop()
 
-    # Ejecución de la inserción incial
+    # Ejecución de la insercion inicial
     insercion_inicial_coleccion_clientes()
     insercion_inicial_coleccion_pedidos()
 
     while True:
+        subprocess.run(["cls"], shell=True, check=True)
         print(
             """
-            ===================================================================
-            |                         PYMONGO ECOMMERCE                       |
-            ===================================================================
-            1. Selecciona todos los clientes que se registraron el ultimo año.
+            ======================================
+            |         PYMONGO ECOMMERCE          |
+            ======================================
+            1. Selecciona todos los clientes que se registraron en el último año.
             """
         )
-        opcion = input("Ingresa tu opción [1-5]: ")
+        opcion = input("Ingresa tu opcion [1-5, 0]: ")
 
         if opcion == "1":
             subprocess.run(["cls"], shell=True, check=True)
-            pass
+            print(
+                """
+                ======================================
+                | CLIENTES REGISTRADOS EL ULTIMO AÑO |
+                ======================================
+                """
+            )
+            clientes_ultimo_año()
+            input("Presiona ENTER para continuar...")
         elif opcion == "2":
             pass
-            subprocess.run(["cls"], shell=True, check=True)
         elif opcion == "3":
             pass
-            subprocess.run(["cls"], shell=True, check=True)
         elif opcion == "4":
             pass
-            subprocess.run(["cls"], shell=True, check=True)
         elif opcion == "5":
             pass
-            subprocess.run(["cls"], shell=True, check=True)
         elif opcion == "0":
+            subprocess.run(["cls"], shell=True, check=True)
             input("Adios. Presiona ENTER para salir...")
             break
         else:
-            input("Opción incorrecta. Presiona ENTER para continuar")
+            input("Opcion incorrecta. Presiona ENTER para continuar...")
     # Salir del programa si el usuario rompe el bucle
+    exit()
+
 
 if __name__ == "__main__":
     main()
