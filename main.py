@@ -329,7 +329,7 @@ def main():
             1. Clientes registrados en el último año.
             2. Pedidos cuyo monto total sea superior a $100.
             3. Clientes cuyo email pertenezca al dominio "gmail.com".
-            4. Pedidos realizados en el año 2023 (Regex).
+            4. Pedidos realizados en el año 2023.
             5. Pedidos que contengan un producto con ID igual a 101.
             6. Clientes con al menos un pedido > $500 en el último año.
             0. Salir.
