@@ -1,5 +1,4 @@
 #TI3032-U3-ACTIVIDAD-FORMATIVA-PYTHON-MONGODB-AlexanderCortés-AngeloZamora
-
 import os
 from dotenv import load_dotenv
 
@@ -233,87 +232,82 @@ def insercion_inicial_coleccion_pedidos() -> None:
     print(respuesta)
     
 def clientes_ultimo_año() -> None:
-    # Calcular la fecha de hoy en el año pasado
     fecha_de_hoy = datetime.datetime.now()
     año_pasado = fecha_de_hoy.year - 1
-    fecha_a_consultar = datetime.date(
-        year=año_pasado,
-        month=fecha_de_hoy.month,
-        day=fecha_de_hoy.day
-    )
-    # Consulta desde el año pasado hasta hoy
+    fecha_a_consultar = datetime.date(year=año_pasado, month=fecha_de_hoy.month, day=fecha_de_hoy.day)
+    
     query = {"fecha_registro" : { "$gte": f"{fecha_a_consultar}T00:00:00Z" } }
-    resultado = coleccion_clientes.aggregate([
-        { "$match": query  },
-        { "$sort": { "fecha_registro": -1 } }
-    ])
-    # Mostrar resultado
+    resultado = coleccion_clientes.find(query).sort("fecha_registro", -1)
+    
+    # Formato limpio en consola
     for doc in resultado:
-        print(doc)
+        print(f"ID: {doc['_id']:<3} | Nombre: {doc['nombre']:<20} | Registro: {doc['fecha_registro']} | Email: {doc['email']}")
 
 
+# 1.2 Pedidos con monto total superior a $100
 def pedidos_mayores_100() -> None:
-    # Criterio 3.1.1: Filtro simple con operador relacional numérico ($gt)
     query = {"monto_total": {"$gt": 100}}
-    resultado = coleccion_pedidos.find(query).sort("monto_total", 1)
+    resultado = coleccion_pedidos.find(query).sort("monto_total", -1)
+    
     for doc in resultado:
-        print(doc)
+        print(f"Cliente ID: {doc['cliente_id']:<3} | Fecha Pedido: {doc['fecha_pedido']} | Total: ${doc['monto_total']:.2f}")
 
 
+# 2.1 Clientes con email de dominio "gmail.com"
 def clientes_email_gmail() -> None:
-    # Clase 1: Uso de Expresiones Regulares ($regex) y opción "i" (Case Insensitive)
-    # El ancla $ asegura que la cadena termine estrictamente con el dominio buscado
     query = {"email": {"$regex": "@gmail\\.com$", "$options": "i"}}
-    resultado = coleccion_clientes.find(query)
+    resultado = coleccion_clientes.find(query).sort("nombre", 1)
+    
     for doc in resultado:
-        print(doc)
+        print(f"Nombre: {doc['nombre']:<20} | Correo: {doc['email']}")
 
 
+# 2.2 Pedidos realizados en el año 2023
 def pedidos_año_2023() -> None:
-    # Clase 1: Expresión Regular para buscar patrones de texto al inicio de la cadena
-    # El ancla ^ asegura que busque documentos que arranquen con el año 2023
     query = {"fecha_pedido": {"$regex": "^2023-"}}
-    resultado = coleccion_pedidos.find(query)
+    resultado = coleccion_pedidos.find(query).sort("fecha_pedido", 1)
+    
     for doc in resultado:
-        print(doc)
+        print(f"Cliente ID: {doc['cliente_id']:<3} | Fecha: {doc['fecha_pedido']} | Monto: ${doc['monto_total']:.2f}")
 
 
+# 3.1 Pedidos que contienen producto_id igual a 101
 def pedidos_con_producto_101() -> None:
-    # Criterio 3.1.3: Búsqueda de datos en subdocumentos dentro de un array embebido
-    # Se utiliza la notación de punto ("campoArray.subcampo") directo en el filtro
     query = {"productos.producto_id": 101}
     resultado = coleccion_pedidos.find(query)
+    
     for doc in resultado:
-        print(doc)
+        print(f"Pedido Cliente ID: {doc['cliente_id']:<3} | Fecha: {doc['fecha_pedido']} | Total: ${doc['monto_total']:.2f}")
+        # Iteramos el subdocumento para mostrar el detalle ordenado abajo
+        for prod in doc["productos"]:
+            if prod["producto_id"] == 101:
+                print(f"   -> [ENCONTRADO] Prod ID: {prod['producto_id']} | Cantidad: {prod['cantidad']} | Precio: ${prod['precio']:.2f}")
 
 
+# 4.1 Consulta Compleja Relacional sin lookup
 def clientes_pedidos_grandes_ultimo_año() -> None:
-    # Criterio 3.1.3 y 3.1.4: Lógica relacional implementando rutinas de iteración simples en Python
     fecha_de_hoy = datetime.datetime.now()
     año_pasado = fecha_de_hoy.year - 1
     fecha_limite = f"{año_pasado}-{fecha_de_hoy.month:02d}-{fecha_de_hoy.day:02d}T00:00:00Z"
 
-    # Fase 1: Encontrar los pedidos filtrados por monto y fecha límite
     query_pedidos = {
         "monto_total": {"$gt": 500},
         "fecha_pedido": {"$gte": fecha_limite}
     }
     pedidos_filtrados = coleccion_pedidos.find(query_pedidos)
 
-    # Fase 2: Recolectar de forma única los IDs de los clientes relacionados (Integridad Referencial)
     lista_ids = []
     for ped in pedidos_filtrados:
         if ped["cliente_id"] not in lista_ids:
             lista_ids.append(ped["cliente_id"])
 
-    # Fase 3: Búsqueda final de datos de clientes asociados mediante operador lógico $in
     if lista_ids:
         query_clientes = {"_id": {"$in": lista_ids}}
-        clientes_finales = coleccion_clientes.find(query_clientes)
+        clientes_finales = coleccion_clientes.find(query_clientes).sort("nombre", 1)
         for cli in clientes_finales:
-            print(cli)
+            print(f"ID: {cli['_id']:<3} | Nombre: {cli['nombre']:<20} | Fono: {cli['telefono']:<16} | Dirección: {cli['direccion']}")
     else:
-        print("No se encontraron clientes que cumplan los criterios.")
+        print("No se encontraron registros que cumplan las condiciones.")
 
 
 def main():
