@@ -239,7 +239,7 @@ def clientes_ultimo_año() -> None:
     query = {"fecha_registro" : { "$gte": f"{fecha_a_consultar}T00:00:00Z" } }
     resultado = coleccion_clientes.find(query).sort("fecha_registro", -1)
     
-    # Formato limpio en consola
+    #Formato en consola: ID, Nombre, Fecha Registro, Email
     for doc in resultado:
         print(f"ID: {doc['_id']:<3} | Nombre: {doc['nombre']:<20} | Registro: {doc['fecha_registro']} | Email: {doc['email']}")
 
@@ -278,7 +278,7 @@ def pedidos_con_producto_101() -> None:
     
     for doc in resultado:
         print(f"Pedido Cliente ID: {doc['cliente_id']:<3} | Fecha: {doc['fecha_pedido']} | Total: ${doc['monto_total']:.2f}")
-        # Iteramos el subdocumento para mostrar el detalle ordenado abajo
+
         for prod in doc["productos"]:
             if prod["producto_id"] == 101:
                 print(f"   -> [ENCONTRADO] Prod ID: {prod['producto_id']} | Cantidad: {prod['cantidad']} | Precio: ${prod['precio']:.2f}")
